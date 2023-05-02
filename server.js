@@ -4,10 +4,13 @@ const httpServer = require("http").createServer(app);
 const io = require("socket.io")(httpServer);
 const path = require("path");
 
+const HOST = '0.0.0.0'; // listen on all network interfaces
 const PORT = process.env.PORT || 3000;
-httpServer.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
-  });
+
+httpServer.listen(PORT, HOST, () => {
+  console.log(`Server listening on http://${HOST}:${PORT}`);
+});
+
 
 app.use(express.static("build"));
 app.get("/socket.io.js", (req, res) => {
