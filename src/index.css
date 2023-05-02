@@ -95,3 +95,11 @@ button:active {
   border-radius: 50%;
   cursor: pointer;
 }
+.editor-container {
+  position: relative;
+}
+
+.user-counter {
+  font-size: 14px;
+  padding: 2px;
+}
