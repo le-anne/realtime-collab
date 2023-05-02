@@ -1,25 +1,25 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import io from "socket.io-client";
 
 const TextEditor = () => {
   const editorRef = useRef(null);
   const socketRef = useRef();
-  const [userStatusMessage, setUserStatusMessage] = useState("");
 
   useEffect(() => {
     socketRef.current = io.connect("/");
 
-    socketRef.current.on("userStatus", (message) => {
-      setUserStatusMessage(message);
-      setTimeout(() => {
-        setUserStatusMessage("");
-      }, 3000);
+    socketRef.current.on("text-update", (updatedText) => {
+      editorRef.current.innerHTML = updatedText;
     });
 
     return () => {
       socketRef.current.disconnect();
     };
   }, []);
+
+  const handleEditorChange = () => {
+    socketRef.current.emit("text-change", editorRef.current.innerHTML);
+  };
 
   const handleButtonClick = (command) => {
     document.execCommand(command, false, null);
@@ -56,8 +56,8 @@ const TextEditor = () => {
         contentEditable
         spellCheck="false"
         ref={editorRef}
+        onInput={handleEditorChange}
       />
-      <div>{userStatusMessage}</div>
     </div>
   );
 };

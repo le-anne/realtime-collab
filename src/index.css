@@ -100,6 +100,18 @@ button:active {
 }
 
 .user-counter {
+  position: static;
   font-size: 14px;
   padding: 2px;
+}
+.user-status {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  color: black;
+  background-color: orange;
+  padding: 3px 8px;
+  border-radius: 5px;
 }
