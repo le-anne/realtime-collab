@@ -111,7 +111,6 @@ button:active {
   transform: translateX(-50%);
   font-size: 14px;
   color: black;
-  background-color: orange;
   padding: 3px 8px;
   border-radius: 5px;
 }
