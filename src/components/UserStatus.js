@@ -8,7 +8,7 @@ const UserStatus = () => {
   useEffect(() => {
     socketRef.current = io();
 
-    console.log("useEffect hook called:" + socketRef.current);
+    console.log("useEffect hook called:", socketRef.current);
 
     setTimeout(() => {
       socketRef.current.on("connect", () => {

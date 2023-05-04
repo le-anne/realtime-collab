@@ -30,20 +30,17 @@ console.log("socketRef.current:", socketRef.current);
 console.log("socketRef.current.on:", socketRef.current.on);
 
 io.on("connection", (socket) => {
-  userCount++;
-  console.log("a user connected", socket.id);
-  io.emit("userStatus", "A user has joined the text editor.");
-  io.emit("userCount", userCount);
+  console.log("User connected");
 
-  socket.on("disconnect", () => {
-    userCount--;
-    console.log("user disconnected", socket.id);
-    io.emit("userStatus", "A user has left the text editor.");
-    io.emit("userCount", userCount);
+  socket.on("enterEditor", () => {
+    io.emit("userStatus", "A user has entered the editor");
   });
 
-  socket.on("text-change", (updatedText) => {
-    // emit the updated text to all other clients
-    socket.broadcast.emit("text-update", updatedText);
+  socket.on("leaveEditor", () => {
+    io.emit("userStatus", "A user has left the editor");
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
   });
 });
