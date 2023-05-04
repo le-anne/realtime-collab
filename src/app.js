@@ -11,7 +11,7 @@ const App = () => {
   const [userStatusMessage, setUserStatusMessage] = useState("");
 
   useEffect(() => {
-    const newSocket = io("http://localhost:3000");
+    const newSocket = io("https://realtime-collab.herokuapp.com/");
     setSocket(newSocket);
 
     newSocket.on("text-update", (updatedText) => {
