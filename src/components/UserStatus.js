@@ -6,22 +6,24 @@ const UserStatus = () => {
   const [userStatusMessage, setUserStatusMessage] = useState("");
 
   useEffect(() => {
-    console.log("useEffect hook called");
+    socketRef.current = io();
 
-    socketRef.current = io.connect("/");
+    console.log("useEffect hook called:" + socketRef.current);
 
-    socketRef.current.on("connect", () => {
-      console.log("Socket connected");
-    });
+    setTimeout(() => {
+      socketRef.current.on("connect", () => {
+        console.log("Socket connected");
+      });
 
-    socketRef.current.on("userStatus", (message) => {
-      console.log("Received message:", message);
-      setUserStatusMessage(message);
-      setTimeout(() => {
-        setUserStatusMessage("");
-      }, 3000);
-      console.log("userStatusMessage state:", userStatusMessage);
-    });
+      socketRef.current.on("userStatus", (message) => {
+        console.log("Received message:", message);
+        setUserStatusMessage(message);
+        setTimeout(() => {
+          setUserStatusMessage("");
+        }, 3000);
+        console.log("userStatusMessage state:", userStatusMessage);
+      });
+    }, 1000);
 
     return () => {
       socketRef.current.disconnect();

@@ -31,7 +31,7 @@ const App = () => {
         <h1 className="card-title">Real-time Collaborative Text Editor</h1>
         <div className="editor-container">
           <TextEditor />
-          <UserStatus message={userStatusMessage} />
+          <UserStatus userStatusMessage={userStatusMessage} />
           <UserCounter />
         </div>
       </div>

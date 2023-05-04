@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const httpServer = require("http").createServer(app);
-const io = require("socket.io")(httpServer);
+import io from "socket.io-client";
 const path = require("path");
 
 const HOST = "0.0.0.0"; // listen on all network interfaces
@@ -25,6 +25,9 @@ app.get("/socket.io.js", (req, res) => {
 });
 
 let userCount = 0;
+
+console.log("socketRef.current:", socketRef.current);
+console.log("socketRef.current.on:", socketRef.current.on);
 
 io.on("connection", (socket) => {
   userCount++;
