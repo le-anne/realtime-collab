@@ -43,6 +43,7 @@
 
 const express = require('express');
 const HTTPServer = require('http').Server;
+const path = require('path');
 const SocketIOServer = require('socket.io').Server;
 
 const PORT = process.env.PORT || 3000;
@@ -52,19 +53,21 @@ const http = HTTPServer(app);
 const io = new SocketIOServer(http);
 
 console.log('Server starting....');
-console.log({ app, http, io });
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'build')));
 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 let userCount = 0;
 
 io.on('connection', (socket) => {
-  console.log('User connected', { socket });
+  console.log('User connected, socketid:', socket.id);
   userCount++;
 
   socket.on('askUserCount', () => {
-    socket.emit('userCount', userCount)
+    socket.emit('userCount', userCount);
   });
 
   io.emit('userCount', userCount);
