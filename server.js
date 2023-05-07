@@ -1,24 +1,14 @@
 const express = require("express");
 const app = express();
-const httpServer = require("http").createServer(app);
-const socketIO = require("socket.io"); // change this line
+const socketIO = require("socket.io");
+const path = require("path");
 
-const HOST = "0.0.0.0"; // listen on all network interfaces
+const HOST = "0.0.0.0";
 const PORT = process.env.PORT || 3000;
 const INDEX = "/index.html";
 
-const server = express()
-  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
-  .listen(PORT, () => console.log(`Listening on ${PORT}`));
-
-const io = socketIO(server);
-
-io.on("connection", (socket) => {
-  console.log("Client connected");
-  socket.on("disconnect", () => console.log("Client disconnected"));
-});
-
-httpServer.listen(PORT, HOST, () => {
+app.use((req, res) => res.sendFile(INDEX, { root: __dirname }));
+app.listen(PORT, HOST, () => {
   console.log(`Server listening on http://${HOST}:${PORT}`);
 });
 
@@ -35,6 +25,8 @@ app.get("/socket.io.js", (req, res) => {
   );
 });
 
+const io = socketIO(app);
+
 let userCount = 0;
 
 io.on("connection", (socket) => {
@@ -49,11 +41,11 @@ io.on("connection", (socket) => {
     io.emit("userStatus", "A user has left the editor");
   });
 
-  io.emit("userCount", userCount); // Add this line
+  io.emit("userCount", userCount);
 
   socket.on("disconnect", () => {
     console.log("User disconnected");
     userCount--;
-    io.emit("userCount", userCount); // Add this line
+    io.emit("userCount", userCount);
   });
 });

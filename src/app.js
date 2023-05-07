@@ -1,26 +1,24 @@
-import React, { useState, useEffect } from "react";
-import io from "socket.io-client";
-import TextEditor from "./components/TextEditor";
-import UserCounter from "./components/UserCounter";
-import UserStatus from "./components/UserStatus";
+import React, { useState, useEffect } from 'react';
+import io from 'socket.io-client';
+import TextEditor from './components/TextEditor';
+import UserCounter from './components/UserCounter';
+import UserStatus from './components/UserStatus';
 
-import "./index.css";
-
-
+import './index.css';
 
 const App = () => {
   const [socket, setSocket] = useState(null);
-  const [userStatusMessage, setUserStatusMessage] = useState("");
+  const [userStatusMessage, setUserStatusMessage] = useState('');
 
   useEffect(() => {
-    const newSocket = io("https://realtime-collab.herokuapp.com/");
+    const newSocket = io('https://realtime-collab.herokuapp.com/');
     setSocket(newSocket);
 
-    newSocket.on("text-update", (updatedText) => {
+    newSocket.on('text-update', (updatedText) => {
       setText(updatedText);
     });
 
-    newSocket.on("userStatus", (message) => {
+    newSocket.on('userStatus', (message) => {
       setUserStatusMessage(message);
     });
 
