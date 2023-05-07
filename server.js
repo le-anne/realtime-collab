@@ -1,8 +1,7 @@
 const express = require("express");
 const app = express();
 const httpServer = require("http").createServer(app);
-import io from "socket.io-client";
-const path = require("path");
+const socketIO = require("socket.io"); // change this line
 
 const HOST = "0.0.0.0"; // listen on all network interfaces
 const PORT = process.env.PORT || 3000;
@@ -38,11 +37,9 @@ app.get("/socket.io.js", (req, res) => {
 
 let userCount = 0;
 
-console.log("socketRef.current:", socketRef.current);
-console.log("socketRef.current.on:", socketRef.current.on);
-
 io.on("connection", (socket) => {
   console.log("User connected");
+  userCount++;
 
   socket.on("enterEditor", () => {
     io.emit("userStatus", "A user has entered the editor");
@@ -52,7 +49,11 @@ io.on("connection", (socket) => {
     io.emit("userStatus", "A user has left the editor");
   });
 
+  io.emit("userCount", userCount); // Add this line
+
   socket.on("disconnect", () => {
     console.log("User disconnected");
+    userCount--;
+    io.emit("userCount", userCount); // Add this line
   });
 });

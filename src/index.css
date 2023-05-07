@@ -106,10 +106,11 @@ button:active {
 }
 .user-status {
   position: absolute;
+  max-width: 200px;
   bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 14px;
+  font-size: 24px;
   color: black;
   padding: 3px 8px;
   border-radius: 5px;

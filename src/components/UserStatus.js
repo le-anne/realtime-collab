@@ -1,31 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
+import "../index.css";
 
 const UserStatus = () => {
   const socketRef = React.useRef();
   const [userStatusMessage, setUserStatusMessage] = useState("");
+  const serverUrl =
+    window.location.hostname === "localhost"
+      ? "http://localhost:3000"
+      : "https://realtime-collab.herokuapp.com/";
 
   useEffect(() => {
-    socketRef.current = io();
+    console.log("Connecting to server:", serverUrl);
+    socketRef.current = io(serverUrl);
 
-    console.log("useEffect hook called:", socketRef.current);
+    socketRef.current.on("connect", () => {
+      console.log("Socket connected with ID:", socketRef.current.id);
+    });
 
-    setTimeout(() => {
-      socketRef.current.on("connect", () => {
-        console.log("Socket connected");
-      });
-
-      socketRef.current.on("userStatus", (message) => {
-        console.log("Received message:", message);
-        setUserStatusMessage(message);
-        setTimeout(() => {
-          setUserStatusMessage("");
-        }, 3000);
-        console.log("userStatusMessage state:", userStatusMessage);
-      });
-    }, 1000);
+    socketRef.current.on("userStatus", (message) => {
+      console.log("Received message:", message);
+      setUserStatusMessage(message);
+      setTimeout(() => {
+        setUserStatusMessage("");
+      }, 3000);
+    });
 
     return () => {
+      console.log("Disconnecting socket");
       socketRef.current.disconnect();
     };
   }, []);

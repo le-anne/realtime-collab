@@ -1,37 +1,36 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
+import "../index.css";
 
 const UserCounter = () => {
+  const socketRef = React.useRef();
   const [userCount, setUserCount] = useState(0);
-  const [statusMessage, setStatusMessage] = useState("");
-  const socketRef = useRef();
+  const serverUrl =
+    window.location.hostname === "localhost"
+      ? "http://localhost:3000"
+      : "https://realtime-collab.herokuapp.com/";
 
   useEffect(() => {
-    socketRef.current = io.connect("/");
+    socketRef.current = io(serverUrl);
+
+    socketRef.current.on("connect", () => {
+      console.log("Socket connected with ID:", socketRef.current.id);
+    });
 
     socketRef.current.on("userCount", (count) => {
+      console.log("Received user count:", count);
       setUserCount(count);
     });
 
-    socketRef.current.on("userStatus", (message) => {
-      setStatusMessage(message);
-      setTimeout(() => {
-        setStatusMessage("");
-      }, 3000);
-    });
-
     return () => {
+      console.log("Disconnecting socket");
       socketRef.current.disconnect();
     };
   }, []);
 
-  return (
-    <div>
-      <div className="user-counter">Users connected: {userCount}</div>
+  console.log("userCount:", userCount);
 
-      {statusMessage && <div className="user-status">{statusMessage}</div>}
-    </div>
-  );
+  return <div className="user-count">{userCount} users online</div>;
 };
 
 export default UserCounter;
