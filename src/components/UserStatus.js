@@ -11,7 +11,7 @@ const UserStatus = () => {
       : "https://realtime-collab.herokuapp.com/";
 
   useEffect(() => {
-    console.log("Connecting to server:", serverUrl);
+    console.log("Starting effect to connect socketio", serverUrl);
     socketRef.current = io(serverUrl);
 
     socketRef.current.on("connect", () => {
