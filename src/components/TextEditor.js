@@ -1,21 +1,24 @@
 import React, { useRef, useEffect } from "react";
-import io from "socket.io-client";
 
-const TextEditor = () => {
+const TextEditor = ({ socket }) => {
   const editorRef = useRef(null);
-  const socketRef = useRef();
-
+  
   useEffect(() => {
-    socketRef.current = io.connect("/");
+    console.log('TextEditor effect, has socket?', !!socket);
 
-    socketRef.current.on("text-update", (updatedText) => {
+    if (!socket) {
+      return;
+    }
+
+    socket.on('text-update', (updatedText) => {
       editorRef.current.innerHTML = updatedText;
+
     });
 
     return () => {
-      socketRef.current.disconnect();
+      socket.off('text-update');
     };
-  }, []);
+  }, [socket]);
 
   const handleEditorChange = () => {
     socketRef.current.emit("text-change", editorRef.current.innerHTML);

@@ -11,18 +11,19 @@ const App = () => {
   const [userStatusMessage, setUserStatusMessage] = useState('');
 
   useEffect(() => {
-    const newSocket = io('https://realtime-collab.herokuapp.com/');
-    setSocket(newSocket);
+    const sock = io('/');
 
-    newSocket.on('text-update', (updatedText) => {
-      setText(updatedText);
+    sock.on('connect', () => {
+      console.log('Socket connected with ID:', sock.id);
     });
 
-    newSocket.on('userStatus', (message) => {
-      setUserStatusMessage(message);
+    sock.on('disconnect', () => {
+      console.log('Socket disconnected');
     });
 
-    return () => newSocket.disconnect();
+    setSocket(sock);
+
+    return () => sock.disconnect();
   }, []);
 
   return (
@@ -30,9 +31,9 @@ const App = () => {
       <div className="card">
         <h1 className="card-title">Real-time Collaborative Text Editor</h1>
         <div className="editor-container">
-          <TextEditor />
-          <UserStatus />
-          <UserCounter />
+          <TextEditor socket={socket} />
+          <UserStatus socket={socket} />
+          <UserCounter socket={socket} />
         </div>
       </div>
     </div>

@@ -63,6 +63,10 @@ io.on('connection', (socket) => {
   console.log('User connected', { socket });
   userCount++;
 
+  socket.on('askUserCount', () => {
+    socket.emit('userCount', userCount)
+  });
+
   io.emit('userCount', userCount);
 
   socket.on('disconnect', () => {
